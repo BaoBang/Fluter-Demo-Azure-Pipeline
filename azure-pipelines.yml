@@ -27,10 +27,7 @@ jobs:
           apksignerKeystorePassword: $(KeyStorePassword)
           apksignerKeystoreAlias: $(KeyAlias)
           apksignerKeyPassword: $(KeyPassword)
-      - task: CopyFiles@2
-        inputs:
-          contents: '**/*.apk'
-          targetFolder: '$(build.artifactStagingDirectory)'
+      
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: 'app/build/outputs/apk/release'

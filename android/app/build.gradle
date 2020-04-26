@@ -71,18 +71,18 @@ android {
             signingConfig signingConfigs.debug
         }
     }
-    applicationVariants.all { variant ->
-        variant.outputs.all {
-            def assembleTaskName = "assemble${variant.name.capitalize()}"
-            if (rootProject.childProjects['flutter']!=null && tasks.findByName(assembleTaskName)) {
-                def linkAPKTask = tasks.create(name: "linkFlutterApk${variant.name.capitalize()}").doLast {
-                    //soft link apk to flutter module build dir build/host
-                    ant.symlink(resource: new File(rootProject.projectDir.path+'/app/build'), link: new File(rootProject.childProjects['flutter'].projectDir.parentFile.parent+'/build/host'))
-                }
-                tasks[assembleTaskName].finalizedBy = [linkAPKTask]
-            }
-        }
-    }
+//    applicationVariants.all { variant ->
+//        variant.outputs.all {
+//            def assembleTaskName = "assemble${variant.name.capitalize()}"
+//            if (rootProject.childProjects['flutter']!=null && tasks.findByName(assembleTaskName)) {
+//                def linkAPKTask = tasks.create(name: "linkFlutterApk${variant.name.capitalize()}").doLast {
+//                    //soft link apk to flutter module build dir build/host
+//                    ant.symlink(resource: new File(rootProject.projectDir.path+'/app/build'), link: new File(rootProject.childProjects['flutter'].projectDir.parentFile.parent+'/build/host'))
+//                }
+//                tasks[assembleTaskName].finalizedBy = [linkAPKTask]
+//            }
+//        }
+//    }
 
 //    applicationVariants.all { variant ->
 //        variant.outputs.each { output ->
