@@ -15,7 +15,7 @@ jobs:
 
       - task: FlutterBuild@0
         inputs:
-          target: apk
+          target: all
           projectDirectory: $(projectDirectory)
 
       - task: AndroidSigning@3
