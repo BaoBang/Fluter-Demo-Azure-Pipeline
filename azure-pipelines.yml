@@ -13,7 +13,7 @@ steps:
 - task: Gradle@2
   inputs:
     workingDirectory: 'android'
-    gradleWrapperFile: 'android/gradlew'
+    gradleWrapperFile: 'gradlew'
     options: '-PversionName=$(Build.BuildNumber) -PversionCode=$(Build.BuildId)'
     tasks: 'assembleRelease'
     publishJUnitResults: false
