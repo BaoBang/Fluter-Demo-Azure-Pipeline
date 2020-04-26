@@ -7,29 +7,32 @@ jobs:
   - job: Android
     pool:
       vmImage: 'macOS-latest'
-    steps:
-      - task: FlutterInstall@0
-        inputs:
-          channel: 'stable'
-           version: 'latest'
-      - task: FlutterBuild@0
-        inputs:
-          target: apk
-          projectDirectory: $(projectDirectory)
+steps:
+  - task: FlutterInstall@0
+    displayName: 'Flutter install'
+    inputs:
+      channel: 'stable'
+      version: 'latest'
+  - task: FlutterBuild@0
+    displayName: 'Flutter build'
+    inputs:
+      target: apk
+      projectDirectory: $(projectDirectory)
 
-      - task: AndroidSigning@3
-        displayName: 'Signing and aligning APK file(s) **/*.apk'
-        inputs:
-          apkFiles: '**/*.apk'
-          apksign: true
-          apksignerKeystoreFile: 'demo.jks'
-          apksignerKeystorePassword: $(KeyStorePassword)
-          apksignerKeystoreAlias: $(KeyAlias)
-          apksignerKeyPassword: $(KeyPassword)
+  - task: AndroidSigning@3
+    displayName: 'Signing and aligning APK file(s) **/*.apk'
+    inputs:
+    apkFiles: '**/*.apk'
+    apksign: true
+    apksignerKeystoreFile: 'demo.jks'
+    apksignerKeystorePassword: $(KeyStorePassword)
+    apksignerKeystoreAlias: $(KeyAlias)
+    apksignerKeyPassword: $(KeyPassword)
 
-      - task: CopyFiles@2
-          inputs:
-            contents: '**/*.apk'
-            targetFolder: '$(build.artifactStagingDirectory)'
+  - task: CopyFiles@2
+    displayName: 'Copy apk'
+    inputs:
+      contents: '**/*.apk'
+      targetFolder: '$(build.artifactStagingDirectory)'
 
-      - task: PublishBuildArtifacts@1
+  - task: PublishBuildArtifacts@1
