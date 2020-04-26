@@ -1,6 +1,6 @@
 # Flutter build
 variables:
-  projectDirectory: 'base_fluter'
+  projectDirectory: 'Fluter-Demo-Azure-Pipeline'
 trigger:
   - master
 jobs:
