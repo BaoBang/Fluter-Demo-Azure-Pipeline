@@ -1,36 +1,38 @@
+# Flutter build
+variables:
+  projectDirectory: 'covid_19_tracker'
 trigger:
   - master
+jobs:
+  - job: Android
+    pool:
+      vmImage: 'macOS-latest'
+    steps:
+      - task: FlutterInstall@0
+        inputs:
+          channel: 'stable'
+          version: 'latest'
 
-pool:
-  vmImage: 'macOS-10.14'
+      - task: FlutterBuild@0
+        inputs:
+          target: apk
+          projectDirectory: $(projectDirectory)
 
-name: $(date:yyyy).$(Month)$(rev:.r)
-
-steps:
-
-- script: yarn install
-
-- task: Gradle@2
-  inputs:
-    workingDirectory: 'android'
-    gradleWrapperFile: 'gradlew'
-    options: '-PversionName=$(Build.BuildNumber) -PversionCode=$(Build.BuildId)'
-    tasks: 'assembleRelease'
-    publishJUnitResults: false
-    javaHomeOption: 'JDKVersion'
-    gradleOptions: '-Xmx3072m'
-
-- task: AndroidSigning@3
-  inputs:
-    apkFiles: '**/*.apk'
-    apksignerKeystoreFile: 'demo.jks'
-    apksignerKeystorePassword: '$(KeyStorePassword)'
-    apksignerKeystoreAlias: '$(KeyAlias)'
-    apksignerKeyPassword: '$(KeyPassword)'
-    zipalign: false
-
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: 'android/app/build/outputs/apk/release'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+      - task: AndroidSigning@3
+        displayName: 'Signing and aligning APK file(s) **/*.apk'
+        inputs:
+          apkFiles: '**/*.apk'
+          apksign: true
+          apksignerKeystoreFile: 'demo.jks'
+          apksignerKeystorePassword: $(KeyStorePassword)
+          apksignerKeystoreAlias: $(KeyAlias)
+          apksignerKeyPassword: $(KeyPassword)
+      - task: CopyFiles@2
+        inputs:
+          contents: '**/*.apk'
+          targetFolder: '$(build.artifactStagingDirectory)'
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: 'app/build/outputs/apk/release'
+          ArtifactName: 'drop'
+          publishLocation: 'Container'
